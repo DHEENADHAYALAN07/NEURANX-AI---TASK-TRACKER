@@ -11,6 +11,10 @@ jobs:
   backend-test:
     runs-on: ubuntu-latest
 
+  env:
+    DB_USERNAME: ${DB_USERNAME}
+    DB_PASSWORD: ${DB_PASSWORD}
+
     defaults:
       run:
         working-directory: ./backend
