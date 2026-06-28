@@ -1,0 +1,54 @@
+name: Task Tracker
+
+on:
+  push:
+    branches:
+      - main
+
+
+jobs:
+
+  backend-test:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: linux permission for mvnw
+        run: chmod +x mvnw
+
+      - name: Build and Test Backend
+        run: ./mvnw clean test
+
+  frontend-test:
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: set up node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build and Test Frontend
+        run: npm run build 
