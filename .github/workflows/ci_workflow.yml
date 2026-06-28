@@ -5,15 +5,22 @@ on:
     branches:
       - main
 
-
 jobs:
-
   backend-test:
     runs-on: ubuntu-latest
 
-  env:
-    DB_USERNAME: ${DB_USERNAME}
-    DB_PASSWORD: ${DB_PASSWORD}
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          DB_USERNAME: ${DB_USERNAME}
+          DB_PASSWORD: ${DB_PASSWORD}
+        ports:
+          - 3306:3306
+
+    env:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
 
     defaults:
       run:
@@ -23,21 +30,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up java
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '21'
 
-      - name: linux permission for mvnw
+      - name: Give execute permission
         run: chmod +x mvnw
+
+      - name: Wait for MySQL
+        run: sleep 20
 
       - name: Build and Test Backend
         run: ./mvnw clean test
 
   frontend-test:
     runs-on: ubuntu-latest
-    
+
     defaults:
       run:
         working-directory: ./frontend
@@ -46,7 +56,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: set up node
+      - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -54,5 +64,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build and Test Frontend
-        run: npm run build 
+      - name: Build Frontend
+        run: npm run build
