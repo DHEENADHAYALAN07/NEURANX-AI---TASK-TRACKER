@@ -7,43 +7,43 @@ on:
 
 jobs:
   backend-test:
-  runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-  services:
-    mysql:
-      image: mysql:8.0
-      env:
-        MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        MYSQL_DATABASE: task_tracker
-      ports:
-        - 3306:3306
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_DATABASE: task_tracker
+        ports:
+          - 3306:3306
 
-  env:
-    DB_USERNAME: ${{ secrets.DB_USERNAME }}
-    DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+    env:
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
-  defaults:
-    run:
-      working-directory: ./backend
+    defaults:
+      run:
+        working-directory: ./backend
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Java
-      uses: actions/setup-java@v4
-      with:
-        distribution: temurin
-        java-version: '21'
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
 
-    - name: Give execute permission
-      run: chmod +x mvnw
+      - name: Give execute permission
+        run: chmod +x mvnw
 
-    - name: Wait for MySQL
-      run: sleep 30
+      - name: Wait for MySQL
+        run: sleep 30
 
-    - name: Build and Test Backend
-      run: ./mvnw clean test
+      - name: Build and Test Backend
+        run: ./mvnw clean test
 
 
   frontend-test:
